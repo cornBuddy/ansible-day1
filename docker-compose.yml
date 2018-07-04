@@ -1,0 +1,11 @@
+---
+version: '3'
+
+services:
+    control-machine:
+        image: ansible/ansible:centos7
+        hostname: control-machine.loc
+
+    target:
+        image: alpine:edge
+        hostname: target.loc
