@@ -5,7 +5,7 @@
     user_id: 1000
     user_primary_group: devops
     user_primary_group_id: 1000
-    user_authorized_key: test # TODO: fix it
+    user_authorized_key: "{{ lookup('file', './config/id_rsa.pub') }}"
     user_home_dir: /home/devops
 
     tasks:
@@ -16,8 +16,16 @@
             {{ user_primary_group }}
 
       - name: Create user
-        command: /usr/sbin/useradd
+        shell: /usr/bin/id -u {{ user_name }} || /usr/sbin/useradd
             --gid {{ user_primary_group_id }}
             --uid {{ user_id }}
             --home-dir {{ user_home_dir }}
             {{ user_name }}
+
+      - name: Add ssh dir
+        command: mkdir -p {{ user_authorized_key }}/.ssh
+
+      - name: Copy key
+        debug: msg={{ user_authorized_key }}
+        shell: echo {{ user_authorized_key }}
+            > {{ user_authorized_key }}/.ssh/id_rsa.pub

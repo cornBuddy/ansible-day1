@@ -3,10 +3,12 @@ version: '3'
 
 services:
     control-machine:
-        image: ansible/ansible:centos7
+        build:
+            context: ./
+            dockerfile: ./control.Dockerfile
         hostname: control-machine.loc
         volumes:
-            - ./config:/etc/orchestration:ro
+            - ./config:/etc/ansible
 
     target:
         build:
