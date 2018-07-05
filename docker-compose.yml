@@ -5,7 +5,11 @@ services:
     control-machine:
         image: ansible/ansible:centos7
         hostname: control-machine.loc
+        volumes:
+            - ./config:/etc/orchestration:ro
 
     target:
-        image: alpine:edge
+        build:
+            context: ./
+            dockerfile: ./target.Dockerfile
         hostname: target.loc
