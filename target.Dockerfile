@@ -1,3 +1,6 @@
 FROM centos:7
 
-CMD while true; do sleep 1000; done
+USER root
+RUN echo "root:root" | chpasswd
+
+CMD ["/sbin/init"]
