@@ -1,0 +1,23 @@
+---
+- hosts: all
+  vars:
+    user_name: devops
+    user_id: 1000
+    user_primary_group: devops
+    user_primary_group_id: 1000
+    user_authorized_key: test # TODO: fix it
+    user_home_dir: /home/devops
+
+    tasks:
+      - name: Create group
+        command: /usr/sbin/groupadd
+            --force
+            --gid {{ user_primary_group_id }}
+            {{ user_primary_group }}
+
+      - name: Create user
+        command: /usr/sbin/useradd
+            --gid {{ user_primary_group_id }}
+            --uid {{ user_id }}
+            --home-dir {{ user_home_dir }}
+            {{ user_name }}
