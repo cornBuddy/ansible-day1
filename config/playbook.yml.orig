@@ -8,6 +8,14 @@
     user_authorized_key: "{{ lookup('file', '/etc/ansible/devops_rsa.pub') }}"
     user_home_dir: /home/devops
 
+<<<<<<< HEAD
+    tasks:
+      - name: Create group
+        command: /usr/sbin/groupadd
+            --force
+            --gid {{ user_primary_group_id }}
+            {{ user_primary_group }}
+=======
   tasks:
     - name: Create group
       command: /usr/sbin/groupadd
@@ -21,6 +29,7 @@
           --uid {{ user_id }}
           --home-dir {{ user_home_dir }}
           {{ user_name }}
+>>>>>>> docker
 
     - name: Copy key
       shell: echo "{{ user_authorized_key }}"

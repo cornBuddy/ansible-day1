@@ -1,0 +1,23 @@
+---
+version: '3'
+
+services:
+    control-machine:
+        build:
+            context: ./
+            dockerfile: ./control.Dockerfile
+        hostname: control-machine
+        volumes:
+            - ./config:/etc/ansible
+
+    target:
+        build:
+            context: ./
+            dockerfile: ./target.Dockerfile
+        hostname: target
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        cap_add:
+            - SYS_ADMIN
+        ports:
+            - "2200:22"
