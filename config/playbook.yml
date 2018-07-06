@@ -9,14 +9,6 @@
     user_home_dir: /home/devops
 
     tasks:
-      - name: Send pubkey to all hosts
-        copy:
-          scr: /root/.ssh/id_rsa.pub
-          dest: /root/.ssh/authorized_keys
-          mode: 0644
-          owner: root
-          group: root
-
       - name: Create group
         command: /usr/sbin/groupadd
             --force
