@@ -9,9 +9,17 @@ services:
         hostname: control-machine.loc
         volumes:
             - ./config:/etc/ansible
+        ports:
+            - "2201:22"
 
     target:
         build:
             context: ./
             dockerfile: ./target.Dockerfile
         hostname: target.loc
+        volumes:
+            - /sys/fs/cgroup:/sys/fs/cgroup:ro
+        cap_add:
+            - SYS_ADMIN
+        ports:
+            - "2200:22"
