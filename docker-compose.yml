@@ -6,17 +6,15 @@ services:
         build:
             context: ./
             dockerfile: ./control.Dockerfile
-        hostname: control-machine.loc
+        hostname: control-machine
         volumes:
             - ./config:/etc/ansible
-        ports:
-            - "2201:22"
 
     target:
         build:
             context: ./
             dockerfile: ./target.Dockerfile
-        hostname: target.loc
+        hostname: target
         volumes:
             - /sys/fs/cgroup:/sys/fs/cgroup:ro
         cap_add:

@@ -1,39 +1,27 @@
 ---
-- hosts: all
+- hosts: target
   vars:
     user_name: devops
     user_id: 1000
     user_primary_group: devops
     user_primary_group_id: 1000
-    user_authorized_key: "{{ lookup('file', '/etc/ansible/id_rsa.pub') }}"
+    user_authorized_key: "{{ lookup('file', '/etc/ansible/devops_rsa.pub') }}"
     user_home_dir: /home/devops
 
-    tasks:
-      - name: Send pubkey to all hosts
-        copy:
-          scr: /root/.ssh/id_rsa.pub
-          dest: /root/.ssh/authorized_keys
-          mode: 0644
-          owner: root
-          group: root
+  tasks:
+    - name: Create group
+      command: /usr/sbin/groupadd
+          --force
+          --gid {{ user_primary_group_id }}
+          {{ user_primary_group }}
 
-      - name: Create group
-        command: /usr/sbin/groupadd
-            --force
-            --gid {{ user_primary_group_id }}
-            {{ user_primary_group }}
+    - name: Create user
+      shell: /usr/bin/id -u {{ user_name }} || /usr/sbin/useradd
+          --gid {{ user_primary_group_id }}
+          --uid {{ user_id }}
+          --home-dir {{ user_home_dir }}
+          {{ user_name }}
 
-      - name: Create user
-        shell: /usr/bin/id -u {{ user_name }} || /usr/sbin/useradd
-            --gid {{ user_primary_group_id }}
-            --uid {{ user_id }}
-            --home-dir {{ user_home_dir }}
-            {{ user_name }}
-
-      - name: Add ssh dir
-        command: mkdir -p {{ user_authorized_key }}/.ssh
-
-      - name: Copy key
-        debug: msg={{ user_authorized_key }}
-        shell: echo {{ user_authorized_key }}
-            > {{ user_authorized_key }}/.ssh/id_rsa.pub
+    - name: Copy key
+      shell: echo "{{ user_authorized_key }}"
+        > {{ user_home_dir }}/.ssh/id_rsa.pub

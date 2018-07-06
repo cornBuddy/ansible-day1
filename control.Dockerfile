@@ -1,9 +1,10 @@
-FROM ansible/centos7-ansible
+FROM sbeliakou/trainings:ansible-manager
 VOLUME ["/etc/ansible"]
 
 USER root
-COPY config/root_rsa.pub /root/.ssh/id_rsa.pub
-
 RUN echo "root:root" | chpasswd
+
+WORKDIR /etc/ansible
+USER devops
 
 CMD ["/sbin/init"]
