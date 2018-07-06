@@ -25,3 +25,6 @@
     - name: Copy key
       shell: echo "{{ user_authorized_key }}"
         > {{ user_home_dir }}/.ssh/id_rsa.pub
+
+    - name: Disable requiretty
+      shell: echo "Defaults:{{ user_name }} !requiretty" >> /etc/sudoers
