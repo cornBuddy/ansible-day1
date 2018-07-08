@@ -1,5 +1,5 @@
 [control]
-control-machine
+control ansible_connection=local
 
 [target]
-target
+target ansible_connection=docker ansible_python_interpreter=/usr/local/bin/python

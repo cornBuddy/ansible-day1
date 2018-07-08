@@ -1,6 +1,3 @@
-FROM sbeliakou/trainings:centos-node-2
+FROM python:3.7.0-slim-stretch
 
-USER root
-RUN echo "root:root" | chpasswd
-
-CMD ["/sbin/init"]
+CMD while true; do sleep 1000; done
