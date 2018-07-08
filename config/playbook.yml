@@ -10,23 +10,25 @@
 
   tasks:
     - name: Create group
-      command: /usr/sbin/groupadd
-          --force
-          --gid {{ user_primary_group_id }}
-          {{ user_primary_group }}
+      group:
+        name: {{user_primary_group}}
+        gid: {{user_primary_group_id}}
       become: true
 
     - name: Create user
-      shell: /usr/bin/id -u {{ user_name }} || /usr/sbin/useradd
-          --gid {{ user_primary_group_id }}
-          --uid {{ user_id }}
-          --home-dir {{ user_home_dir }}
-          {{ user_name }}
+      user:
+        uid: {{user_id}}
+        group: {{user_primary_group}}
+        home: {{user_home_dir}}
+        name: {{user_name}}
       become: true
 
     - name: Copy key
-      shell: echo "{{ user_authorized_key }}"
-        > {{ user_home_dir }}/.ssh/id_rsa.pub
+      copy:
+        src: /etc/ansible/devops_rsa.pub
+        dest: "{{user_home_dir}}/.ssh/id_rsa.pub"
+        owner: {{user_name}}
+        mode: 0644
 
     - name: Disable requiretty
       template:
