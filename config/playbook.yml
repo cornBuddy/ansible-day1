@@ -11,23 +11,23 @@
   tasks:
     - name: Create group
       group:
-        name: {{user_primary_group}}
-        gid: {{user_primary_group_id}}
+        name: "{{user_primary_group}}"
+        gid: "{{user_primary_group_id}}"
       become: true
 
     - name: Create user
       user:
-        uid: {{user_id}}
-        group: {{user_primary_group}}
-        home: {{user_home_dir}}
-        name: {{user_name}}
+        uid: "{{user_id}}"
+        group: "{{user_primary_group}}"
+        home: "{{user_home_dir}}"
+        name: "{{user_name}}"
       become: true
 
     - name: Copy key
       copy:
         src: /etc/ansible/devops_rsa.pub
         dest: "{{user_home_dir}}/.ssh/id_rsa.pub"
-        owner: {{user_name}}
+        owner: "{{user_name}}"
         mode: 0644
 
     - name: Disable requiretty
