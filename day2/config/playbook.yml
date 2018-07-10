@@ -1,0 +1,42 @@
+---
+- hosts: target
+  vars:
+    user_name: devops
+    user_id: 1000
+    user_primary_group: devops
+    user_primary_group_id: 1000
+    user_authorized_key: "{{playbook_dir}}/devops_rsa.pub"
+    user_home_dir: /home/devops
+    user_password: "$6$ZgoSdyNlcwFm54$77BFP9HoUEy8BZZ4/j3xV7MBmJq49DQ9EIo4iCnh3\
+      zwzdr4i3LpUn2nXddoE9lfwujEsKGvxycf5P/mbTx.sD1"
+
+  tasks:
+    - name: Create group
+      group:
+        name: "{{user_primary_group}}"
+        gid: "{{user_primary_group_id}}"
+
+    - name: Create user
+      user:
+        uid: "{{user_id}}"
+        group: "{{user_primary_group}}"
+        home: "{{user_home_dir}}"
+        name: "{{user_name}}"
+        password: "{{user_password}}"
+
+    - name: Create .ssh dir
+      file:
+        path: "{{user_home_dir}}/.ssh"
+        state: directory
+
+    - name: Copy key
+      copy:
+        src: "{{user_authorized_key}}"
+        dest: "{{user_home_dir}}/.ssh/id_rsa.pub"
+        owner: "{{user_name}}"
+        mode: 0644
+
+    - name: Disable requiretty
+      template:
+        src: sudoers.j2
+        dest: /etc/sudoers
