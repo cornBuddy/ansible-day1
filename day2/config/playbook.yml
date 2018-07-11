@@ -5,7 +5,6 @@
     user_id: 1000
     user_primary_group: devops
     user_primary_group_id: 1000
-    user_authorized_key: "devops_rsa.pub"
 
   tasks:
     - name: Create group
@@ -21,20 +20,11 @@
         name: "{{user_name}}"
       become: true
 
-    - name: Create .ssh dir
-      file:
-        path: "{{user_home_dir}}/.ssh"
-        state: directory
-      become: true
-
-    # TODO: use authorized_key module
     - name: Copy key
-      copy:
-        src: "{{user_authorized_key}}"
-        dest: "{{user_home_dir}}/.ssh/id_rsa.pub"
-        owner: "{{user_name}}"
-        mode: 0644
-      become: true
+      authorized_key:
+        user: "{{user_name}}"
+        state: present
+        key: "{{ lookup('file', '{{playbook_dir}}/{{user_name}}_rsa.pub') }}"
 
     - name: Ensure /etc/sudoers.d/ exists
       file:
@@ -50,7 +40,7 @@
 
     - name: Config sudo
       template:
-        src: user.j2
+        src: "{{user_name}}.j2"
         dest: "/etc/sudoers.d/{{user_name}}"
         validate: '/usr/sbin/visudo -cf %s'
       become: true
