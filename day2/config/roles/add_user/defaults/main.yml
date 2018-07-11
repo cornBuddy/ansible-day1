@@ -1,3 +1,2 @@
 ---
-user_primary_group: "{{user_name}}"
 user_priviliges: "{{ lookup('template', 'sudo_config.j2') }}"
