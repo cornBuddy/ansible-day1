@@ -1,2 +1,2 @@
 ---
-# vars file for add_user
+user_primary_group: "{{user_name}}"
