@@ -24,7 +24,7 @@
       authorized_key:
         user: "{{user_name}}"
         state: present
-        key: "{{ lookup('file', '{{playbook_dir}}/{{user_name}}_rsa.pub') }}"
+        key: "{{ lookup('file', '{{user_name}}_rsa.pub') }}"
 
     - name: Ensure /etc/sudoers.d/ exists
       file:
