@@ -1,0 +1,22 @@
+---
+# vars should be moved to the role level
+- vars:
+  host: "{{hostvars[groups['database'][0]].ansible_ssh_host}}"
+  db_port: "{{database.ora_port}}"
+  service_name: "{{database.ora_service_name}}"
+  sqlplus_exe: "{{sqlplus_installed.stdout}}"
+
+- name: "SQLPLUS.RUN.SCRIPT :: Run sql scripts"
+  shell: |
+    {{sqlplus_exe}} -S {{database.ora_user}}/{{database.ora_pass}}
+    "@(DESCRIPTION=
+        (ADDRESS=(PROTOCOL=TCP)
+            (Host={{host | default('127.0.0.1')}})
+            (Port={{db_port}}))
+        (CONNECT_DATA=(SERVICE_NAME={{service_name}})))"
+    {{ 'as sysdba' if run_as_sysdba | bool else '' }}
+    < {{ sqlplus_dir }}/{{ item }}
+  run_once: true
+  with_items: "{{ sql_scripts }}"
+  register: sqlplus_out
+  failed_when: "'ORA-' in sqlplus_out.stdout or 'ERROR' in sqlplus_out.stdout"
