@@ -1,0 +1,9 @@
+---
+version: '3'
+
+services:
+    target:
+        build:
+            context: ./
+            dockerfile: ./target.Dockerfile
+        container_name: target
