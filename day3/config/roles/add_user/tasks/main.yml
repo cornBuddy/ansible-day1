@@ -47,6 +47,8 @@
 
 - name: Test if group created
   shell: "grep -P {{_is_group_created}} /etc/group"
+  changed_when: false
 
 - name: Test if user created
   shell: "grep -P {{_is_user_created}} /etc/passwd"
+  changed_when: false
