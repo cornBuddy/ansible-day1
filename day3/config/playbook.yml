@@ -1,56 +1,26 @@
 ---
 - hosts: target
-  vars:
-    user_name: devops
-    user_id: 1000
-    user_primary_group: devops
-    user_primary_group_id: 1000
-    user_authorized_key: "devops_rsa.pub"
 
-  tasks:
-    - name: Create group
-      group:
-        name: "{{user_primary_group}}"
-        gid: "{{user_primary_group_id}}"
-      become: true
+  roles:
+    - role: add_user
+      user_name: devops
+      user_id: 1000
+      user_group_id: 1000
+      user_auth_keys:
+        - devops_rsa.pub
+      user_priviliges:
+        - "ALL=(ALL) NOPASSWD: ALL"
 
-    - name: Create user
-      user:
-        uid: "{{user_id}}"
-        group: "{{user_primary_group}}"
-        name: "{{user_name}}"
-      become: true
+    - role: add_user
+      user_name: deployer
+      user_id: 1001
+      user_group_id: 1001
+      user_priviliges:
+        - "ALL=(ALL) NOPASSWD: /bin/ls"
 
-    - name: Create .ssh dir
-      file:
-        path: "{{user_home_dir}}/.ssh"
-        state: directory
-      become: true
-
-    # TODO: use authorized_key module
-    - name: Copy key
-      copy:
-        src: "{{user_authorized_key}}"
-        dest: "{{user_home_dir}}/.ssh/id_rsa.pub"
-        owner: "{{user_name}}"
-        mode: 0644
-      become: true
-
-    - name: Ensure /etc/sudoers.d/ exists
-      file:
-        dest: /etc/sudoers.d/
-        state: directory
-      become: true
-
-    - name: Ensure /etc/sudoers.d/ is enabled
-      lineinfile:
-        dest: /etc/sudoers
-        line: "#includedir /etc/sudoers.d"
-      become: true
-
-    - name: Config sudo
-      template:
-        src: user.j2
-        dest: "/etc/sudoers.d/{{user_name}}"
-        validate: '/usr/sbin/visudo -cf %s'
-      become: true
+    - role: add_user
+      user_name: jenkins
+      user_id: 1002
+      user_group_id: 1002
+      user_priviliges:
+        - "ALL=(ALL) NOPASSWD: /bin/cat"

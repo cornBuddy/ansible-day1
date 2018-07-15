@@ -1,0 +1,5 @@
+---
+# is it good plase for such var?
+# is it legal to make "private" vars in aslibe?
+_is_user_created: "{{user_name}}:x:{{user_id}}:{{user_group_id}}"
+_is_group_created: "{{user_primary_group}}:x:{{user_group_id}}"
