@@ -4,8 +4,8 @@ default_config:
     - "ALL=(ALL) NOPASSWD: /bin/su"
   defaults:
     - "!requiretty"
-  name: 'user'
+  name: "user"
   id: 65534
-  primary_group: "user"
+  primary_group: "{{config.name}}"
   group_id: 65534
   auth_keys: []
