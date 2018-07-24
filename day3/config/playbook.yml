@@ -1,26 +1,15 @@
 ---
 - hosts: target
 
-  roles:
-    - role: add_user
-      user_name: devops
-      user_id: 1000
-      user_group_id: 1000
-      user_auth_keys:
-        - devops_rsa.pub
-      user_priviliges:
-        - "ALL=(ALL) NOPASSWD: ALL"
+  vars_files:
+    - vars/users.yml
 
-    - role: add_user
-      user_name: deployer
-      user_id: 1001
-      user_group_id: 1001
-      user_priviliges:
-        - "ALL=(ALL) NOPASSWD: /bin/ls"
-
-    - role: add_user
-      user_name: jenkins
-      user_id: 1002
-      user_group_id: 1002
-      user_priviliges:
-        - "ALL=(ALL) NOPASSWD: /bin/cat"
+  tasks:
+    - name: Create users
+      include_role:
+        name: add_user
+      vars:
+        config: "{{user_config}}"
+      loop: "{{users}}"
+      loop_control:
+        loop_var: user_config

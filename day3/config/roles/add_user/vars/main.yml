@@ -1,5 +1,5 @@
 ---
-# is it good plase for such var?
-# is it legal to make "private" vars in aslibe?
-_is_user_created: "{{user_name}}:x:{{user_id}}:{{user_group_id}}"
-_is_group_created: "{{user_primary_group}}:x:{{user_group_id}}"
+user: "{{default_config | combine(config)}}"
+
+_is_user_created: "{{user.name}}:x:{{user.id}}:{{user.group_id}}"
+_is_group_created: "{{user.primary_group}}:x:{{user.group_id}}"

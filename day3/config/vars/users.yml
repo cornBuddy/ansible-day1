@@ -1,0 +1,21 @@
+---
+users:
+  - name: devops
+    id: 1000
+    group_id: 1000
+    auth_keys:
+      - devops_rsa.pub
+    priviliges:
+      - "ALL=(ALL) NOPASSWD: ALL"
+
+  - name: deployer
+    id: 1001
+    group_id: 1001
+    priviliges:
+      - "ALL=(ALL) NOPASSWD: /bin/ls"
+
+  - name: jenkins
+    id: 1002
+    group_id: 1002
+    priviliges:
+      - "ALL=(ALL) NOPASSWD: /bin/cat"

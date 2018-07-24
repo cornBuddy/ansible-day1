@@ -1,10 +1,11 @@
 ---
-user_priviliges:
-  - "ALL=(ALL) NOPASSWD: /bin/su"
-user_defaults:
-  - "!requiretty"
-user_name: 'user'
-user_id: 65534
-user_primary_group: "{{user_name}}"
-user_group_id: 65534
-user_auth_keys: []
+default_config:
+  priviliges:
+    - "ALL=(ALL) NOPASSWD: /bin/su"
+  defaults:
+    - "!requiretty"
+  name: 'user'
+  id: 65534
+  primary_group: "user"
+  group_id: 65534
+  auth_keys: []

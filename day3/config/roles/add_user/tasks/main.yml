@@ -1,49 +1,43 @@
 ---
 - name: Create group
   group:
-    name: "{{user_primary_group}}"
-    gid: "{{user_group_id}}"
+    name: "{{user.primary_group}}"
+    gid: "{{user.group_id}}"
   become: true
 
 - name: Create user
   user:
-    group: "{{user_primary_group}}"
-    name: "{{user_name}}"
-    uid: "{{user_id}}"
+    group: "{{user.primary_group}}"
+    name: "{{user.name}}"
+    uid: "{{user.id}}"
   become: true
 
 - name: Copy key
   authorized_key:
-    user: "{{user_name}}"
+    user: "{{user.name}}"
     state: present
     key: "{{ lookup('file', item) }}"
-  loop: "{{user_auth_keys}}"
-
-- name: Add sudoer config
-  file:
-    path: "/etc/sudoers.d/{{user_name}}"
-    owner: "{{user_name}}"
-    group: "{{user_primary_group}}"
-    state: touch
-  become: true
+  loop: "{{user.auth_keys}}"
 
 - name: Set defaults
   lineinfile:
-    path: "/etc/sudoers.d/{{user_name}}"
-    line: "Defaults:{{user_name}} {{item}}"
+    path: "/etc/sudoers.d/{{user.name}}"
+    line: "Defaults:{{user.name}} {{item}}"
     validate: '/usr/sbin/visudo -cf %s'
+    create: true
   become: true
   backup: true
-  loop: "{{user_defaults}}"
+  loop: "{{user.defaults}}"
 
 - name: Config sudo
   lineinfile:
-    path: "/etc/sudoers.d/{{user_name}}"
-    line: "{{user_name}} {{item}}"
+    path: "/etc/sudoers.d/{{user.name}}"
+    line: "{{user.name}} {{item}}"
     validate: '/usr/sbin/visudo -cf %s'
+    create: true
   become: true
   backup: true
-  loop: "{{user_priviliges}}"
+  loop: "{{user.priviliges}}"
 
 - name: Test if group created
   shell: "grep -P {{_is_group_created}} /etc/group"
